@@ -10,18 +10,63 @@
 using namespace std;
 
 bool ReadFile(string, List*);
+bool DeleteRecord(List*, char*);
+bool Display(List, int, int);
+bool InsertBook(string, List*);
+bool SearchStudent(List*, char* id, LibStudent&);
+bool computeAndDisplayStatistics(List*);
+bool printStuWithSameBook(List*, char*);
+bool displayWarnedStudent(List*, List*, List*);
+int menu();
+
 bool Redundant(List, LibStudent);
 bool printList2(List);
-
-struct Person {						// define a person type
-	char	name[20], phone[20];	// user name and phone
-	double  money;					// money in bank
-};
 
 int main() {
 	LibStudent student;
 	List stuList;
 	string fileName = "student.txt";
+	
+	do {
+		switch (menu()) {
+
+		case 1: // Read File
+			if (!ReadFile(fileName, &stuList))
+				cout << "Unable to read " << fileName << "." << endl;
+			else
+				cout << "Read successfully." << endl;
+			cout << endl;
+			system("pause");
+			system("cls");
+			break;
+		case 2: // Delete record
+			break;
+		case 3: // Search Student
+			break;
+		case 4: // Insert book
+			break;
+		case 5: // Display
+			break;
+		case 6: // Compute and Display Statistics
+			break;
+
+		case 7: // print Stu With Same Book
+			break;
+
+		case 8: // Display warned student
+			break;
+
+		case 9: // Exit
+			return 0;
+		}
+
+	} while (1);
+
+	system("pause");
+	return 0;
+}
+
+int menu() {
 	int option;
 
 	cout << "-------------------------------------" << endl;
@@ -40,13 +85,18 @@ int main() {
 	cout << "Please input your option: ";
 	cin >> option;
 
-	if (option == 1) {
-		ReadFile(fileName, &stuList);
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(100, '\n');
+		cout << "Not an integer! Enter again: ";
+		cin >> option;
 	}
 
-
-	system("pause");
-	return 0;
+	while (option < 1 || option > 9) {
+		cout << "Out of range! Enter again: ";
+		cin >> option;
+	}
+	return option;
 }
 
 bool Redundant(List list, LibStudent item)
