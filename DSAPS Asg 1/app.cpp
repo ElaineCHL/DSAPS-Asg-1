@@ -123,7 +123,6 @@ bool Redundant(List list, LibStudent item)
 	if (list.empty())
 		return false;
 
-	//slower method
 	for (int i = 1; i <= list.size(); i++)
 	{
 		if (list.get(i, temp))
