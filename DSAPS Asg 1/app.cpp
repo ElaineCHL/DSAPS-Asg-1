@@ -23,25 +23,41 @@ bool Redundant(List, LibStudent);
 bool printList2(List);
 
 int main() {
-	LibStudent student;
+	LibStudent stu;
 	List stuList;
 	string fileName = "student.txt";
+	char id[10];
 	
 	do {
 		switch (menu()) {
 
 		case 1: // Read File
-			if (!ReadFile(fileName, &stuList))
+			if (!ReadFile(fileName, &stuList)) 
 				cout << "Unable to read " << fileName << "." << endl;
-			else
+			
+			else 
 				cout << "Read successfully." << endl;
-			cout << endl;
-			system("pause");
-			system("cls");
+				cout << endl;
+				system("pause");
+				system("cls");
+			
 			break;
 		case 2: // Delete record
 			break;
 		case 3: // Search Student
+			cout << " Enter Student ID: ";
+			cin >> id;
+			cout << endl;
+			if (SearchStudent(&stuList, id, stu)) {
+				cout << "Name: " << stu.name << endl;
+				cout << "ID: " << stu.id << endl;
+				cout << "Course: " << stu.course << endl;
+				cout << "Phone No: " <<stu.phone_no << endl;
+				cout << "Total Fine: " << stu.total_fine << endl;
+			}
+			system("pause");
+			system("cls");
+			
 			break;
 		case 4: // Insert book
 			break;
@@ -77,7 +93,7 @@ int menu() {
 		<< "3. Search student" << endl
 		<< "4. Insert book" << endl
 		<< "5. Display output" << endl
-		<< "6. COmpute and Display Statistics" << endl
+		<< "6. Compute and Display Statistics" << endl
 		<< "7. Student with Same Book" << endl
 		<< "8. Display Warned Student" << endl
 		<< "9. Exit" << endl << endl;
@@ -197,3 +213,30 @@ bool ReadFile(string filename, List* stuList) {
 		return true;
 	}
 }
+bool SearchStudent(List* list, char* id, LibStudent& stu) {
+
+	Node* cur;
+	cur = list->head;
+
+	if (list->empty()) {
+		cout << "\n\nCannot print from an empty list\n";
+		return false;
+	}
+
+	else {
+		while (cur != NULL) {
+			for (int i = 1; i <= list->size(); i++) {
+				if (strcmp(cur->item.id, id) == 0) {
+					list->get(i, stu);
+					return &stu;
+				}
+				cur = cur->next;
+			}
+
+		}
+		cout << "\nSTUDENT WITH ID " << id << "IS NOT FOUND IN THE LIST" << endl;
+		return false;
+	}
+
+}
+
