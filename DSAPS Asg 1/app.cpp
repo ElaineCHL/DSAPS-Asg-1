@@ -20,13 +20,14 @@ bool displayWarnedStudent(List*, List*, List*);
 int menu();
 
 bool Redundant(List, LibStudent);
-bool printList2(List);
+bool printstuList(List);
 
 int main() {
 	LibStudent stu;
 	List stuList;
 	string fileName = "student.txt";
 	char id[10];
+	char ID[20];
 	
 	do {
 		switch (menu()) {
@@ -43,6 +44,11 @@ int main() {
 			
 			break;
 		case 2: // Delete record
+			ReadFile(fileName, &stuList);
+			cout << "Please input the student ID you wish to delete: ";
+			cin.ignore();
+			cin.getline(ID, 20);
+			DeleteRecord(&stuList, ID);
 			break;
 		case 3: // Search Student
 			cout << " Enter Student ID: ";
@@ -86,7 +92,7 @@ int menu() {
 	int option;
 
 	cout << "-------------------------------------" << endl;
-	cout << "Menu" << endl;
+	cout << "                Menu" << endl;
 	cout << "-------------------------------------" << endl;
 	cout << "1. Read File" << endl
 		<< "2. Delete record" << endl
@@ -96,7 +102,7 @@ int menu() {
 		<< "6. Compute and Display Statistics" << endl
 		<< "7. Student with Same Book" << endl
 		<< "8. Display Warned Student" << endl
-		<< "9. Exit" << endl << endl;
+		<< "9. Exit" << endl;
 	cout << "-------------------------------------" << endl;
 	cout << "Please input your option: ";
 	cin >> option;
@@ -134,7 +140,7 @@ bool Redundant(List list, LibStudent item)
 	return false;
 }
 
-bool printList2(List list)
+bool printstuList(List list)
 {
 	Node* cur;
 
@@ -202,11 +208,11 @@ bool ReadFile(string filename, List* stuList) {
 				stuList->insert(count++, student);
 
 			}
-			//stuList.insert(count++, student);
+			
 			else
-				cout << student.name << "already exist." << endl;
+				cout << student.name << " already exist." << endl;
 		}
-		printList2(*stuList);
+		printstuList(*stuList);
 		inFile.close();
 
 		return true;
@@ -239,3 +245,24 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 
 }
 
+bool DeleteRecord(List *stuList, char *ID) {
+	
+	type value;
+	for (int i = 1; i <= stuList->size(); i++) {
+		stuList->get(i, value);
+		//cout << value.id << " " << endl;
+		if (strcmp(ID, value.id) == 0) {
+			cout << ID << endl;
+			stuList->remove(i);
+			system("cls");
+			cout << "-----------------------------------" << endl;
+			cout << "Updated List after Delete" << endl;
+			cout << "-----------------------------------" << endl;
+			if (!printstuList(*stuList))
+				cout << "\nCannot print from empty list.\n";
+			return true;
+		}
+		else
+			return false;
+	}
+}
