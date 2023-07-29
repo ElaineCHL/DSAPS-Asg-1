@@ -171,52 +171,52 @@ bool ReadFile(string filename, List* stuList) {
 	int count = 1;
 	char name[20], course[20], phone[20], id[20];
 
-	if (inFile.fail())
+	if (inFile.fail()) {
 		cout << "Unable to open the file!" << endl;
-
-	else {
-		while (!inFile.eof()) {
-			for (int j = 0; j < 3; j++) {
-				inFile >> s;
-			}
-			inFile >> id;
-
-			for (int j = 0; j < 2; j++) {
-				inFile >> s;
-			}
-			inFile >> name;
-			inFile.getline(s, 256);
-			strcat_s(name, s);
-
-			for (int j = 0; j < 2; j++) {
-				inFile >> s;
-			}
-			inFile >> course;
-
-			for (int j = 0; j < 3; j++) {
-				inFile >> s;
-			}
-			inFile >> phone;
-
-			strcpy_s(student.id, id);
-			strcpy_s(student.name, name);
-			strcpy_s(student.course, course);
-			strcpy_s(student.phone_no, phone);
-
-			if (!Redundant(*stuList, student))
-			{
-				stuList->insert(count++, student);
-
-			}
-			
-			else
-				cout << student.name << " already exist." << endl;
-		}
-		printstuList(*stuList);
-		inFile.close();
-
-		return true;
+		return false;
 	}
+	while (!inFile.eof()) {
+		for (int j = 0; j < 3; j++) {
+			inFile >> s;
+		}
+		inFile >> id;
+
+		for (int j = 0; j < 2; j++) {
+			inFile >> s;
+		}
+		inFile >> name;
+		inFile.getline(s, 256);
+		strcat_s(name, s);
+
+		for (int j = 0; j < 2; j++) {
+			inFile >> s;
+		}
+		inFile >> course;
+
+		for (int j = 0; j < 3; j++) {
+			inFile >> s;
+		}
+		inFile >> phone;
+
+		strcpy_s(student.id, id);
+		strcpy_s(student.name, name);
+		strcpy_s(student.course, course);
+		strcpy_s(student.phone_no, phone);
+
+		if (!Redundant(*stuList, student))
+		{
+			stuList->insert(count++, student);
+
+		}
+
+		else
+			cout << student.name << " already exist." << endl;
+	}
+	printstuList(*stuList);
+	inFile.close();
+
+	return true;
+
 }
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
 
