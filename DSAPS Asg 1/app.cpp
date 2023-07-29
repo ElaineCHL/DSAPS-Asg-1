@@ -44,11 +44,20 @@ int main() {
 			
 			break;
 		case 2: // Delete record
-			ReadFile(fileName, &stuList);
+			//ReadFile(fileName, &stuList);
 			cout << "Please input the student ID you wish to delete: ";
 			cin.ignore();
 			cin.getline(ID, 20);
-			DeleteRecord(&stuList, ID);
+			if(DeleteRecord(&stuList, ID)){
+				system("cls");
+				cout << "-----------------------------------" << endl;
+				cout << "     Updated List after Delete" << endl;
+				cout << "-----------------------------------" << endl;
+				if (!printstuList(*stuList))
+					cout << "\nCannot print from empty list.\n";
+			}
+			else
+				cout << "Unable to delete ID" << endl;
 			break;
 		case 3: // Search Student
 			cout << " Enter Student ID: ";
@@ -253,16 +262,13 @@ bool DeleteRecord(List *stuList, char *ID) {
 		//cout << value.id << " " << endl;
 		if (strcmp(ID, value.id) == 0) {
 			cout << ID << endl;
-			stuList->remove(i);
-			system("cls");
-			cout << "-----------------------------------" << endl;
-			cout << "Updated List after Delete" << endl;
-			cout << "-----------------------------------" << endl;
-			if (!printstuList(*stuList))
-				cout << "\nCannot print from empty list.\n";
-			return true;
-		}
-		else
+			if(stuList->remove(i)){
+				return true;
+			}
 			return false;
+			
+		}
+		
 	}
+	return false;
 }
