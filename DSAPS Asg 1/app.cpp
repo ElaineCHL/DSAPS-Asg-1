@@ -53,7 +53,7 @@ int main() {
 				cout << "-----------------------------------" << endl;
 				cout << "     Updated List after Delete" << endl;
 				cout << "-----------------------------------" << endl;
-				if (!printstuList(*stuList))
+				if (!printstuList(stuList))
 					cout << "\nCannot print from empty list.\n";
 			}
 			else
