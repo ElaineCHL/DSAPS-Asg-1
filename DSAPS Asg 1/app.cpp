@@ -311,7 +311,7 @@ bool InsertBook(string filename, List* list) {
 		// Read book.txt
 		while (!bookFile.eof()) {
 			char studentId[10];
-			char author[256], temp[256];
+			char author[256];
 			char title[256];
 			char publisher[30];
 			char ISBN[11];
