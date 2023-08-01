@@ -4,6 +4,7 @@
 #include	<cstdio>
 #include    <fstream>
 #include    <string>
+#include	<iomanip>
 #include	"List.h"
 #include    "LibStudent.h"
 #include    "LibBook.h"
@@ -593,7 +594,7 @@ bool Display(List* list, int source, int detail) {
 		*output << "Id: " << student.id << endl;
 		*output << "Course: " << student.course << endl;
 		*output << "Phone No: " << student.phone_no << endl;
-		*output << "Total Fine: RM" << student.total_fine << endl;
+		*output << "Total Fine: RM" << fixed << setprecision(2) << student.total_fine << endl;
 		*output << endl;
 
 	
@@ -615,7 +616,7 @@ bool Display(List* list, int source, int detail) {
 				*output << "Call Number: " << student.book[i].callNum << endl;
 				*output << "Borrow Date: " << student.book[i].borrow.day << "/" << student.book[i].borrow.month << "/" << student.book[i].borrow.year << endl;
 				*output << "Due Date: " << student.book[i].due.day << "/" << student.book[i].due.month << "/" << student.book[i].due.year << endl;
-				*output << "Fine: RM" << student.book[i].fine << "\n\n";
+				*output << "Fine: RM" << fixed << setprecision(2) << student.book[i].fine << "\n\n";
 			}
 		}
 
