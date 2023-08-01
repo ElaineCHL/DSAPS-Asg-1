@@ -14,9 +14,9 @@ bool DeleteRecord(List*, char*);
 bool Display(List*, int, int);
 bool InsertBook(string, List*);
 bool SearchStudent(List*, char* id, LibStudent&);
-//bool computeAndDisplayStatistics(List*);
-//bool printStuWithSameBook(List*, char*);
-//bool displayWarnedStudent(List*, List*, List*);
+bool computeAndDisplayStatistics(List*);
+bool printStuWithSameBook(List*, char*);
+bool displayWarnedStudent(List*, List*, List*);
 int menu();
 
 bool Redundant(List, LibStudent);
@@ -94,8 +94,8 @@ int main() {
 			cout << endl;
 
 			// Call the Display function here with the appropriate parameters
-			cout << "DISPLAY OUTPUT\n";
-			if (Display(&stuList, source, detail)) {			
+			if (Display(&stuList, source, detail)) {
+				cout << "\nSuccessfully display output.\n\n";
 			}
 			else {
 				cout << "Error displaying output.\n";
@@ -547,15 +547,31 @@ bool Display(List* list, int source, int detail) {
 	// Create an output stream (file or screen)
 	ostream* output;
 	ofstream outputFile;
+
 	if (source == 1) {
-		outputFile.open("student_info.txt"); // Open the file for writing
-		if (!outputFile.is_open()) {
-			cout << "Error opening file for writing." << endl;
+		if (detail == 1) {
+			outputFile.open("student_booklist.txt"); // Open the file for writing
+			cout << "Successfully display output to student_booklist.txt." << endl;
+			if (!outputFile.is_open()) {
+				cout << "Error opening file for writing." << endl;
+				return false;
+			}
+		}
+		else if (detail == 2) {
+			outputFile.open("student_info.txt"); // Open the file for writing
+			cout << "Successfully display output to student_info.txt." << endl;
+			if (!outputFile.is_open()) {
+				cout << "Error opening file for writing." << endl;
+				return false;
+			}
+		}
+		else {
+			cout << "Invalid detail input. Use 1 for student info or 2 for book list." << endl;
 			return false;
 		}
 		output = &outputFile;
-		
 	}
+
 	else if (source == 2) {
 		output = &cout;
 	}
@@ -577,7 +593,7 @@ bool Display(List* list, int source, int detail) {
 		*output << "Id: " << student.id << endl;
 		*output << "Course: " << student.course << endl;
 		*output << "Phone No: " << student.phone_no << endl;
-		*output << "Total Fine: " << student.total_fine << endl;
+		*output << "Total Fine: RM" << student.total_fine << endl;
 		*output << endl;
 
 	
@@ -599,7 +615,7 @@ bool Display(List* list, int source, int detail) {
 				*output << "Call Number: " << student.book[i].callNum << endl;
 				*output << "Borrow Date: " << student.book[i].borrow.day << "/" << student.book[i].borrow.month << "/" << student.book[i].borrow.year << endl;
 				*output << "Due Date: " << student.book[i].due.day << "/" << student.book[i].due.month << "/" << student.book[i].due.year << endl;
-				*output << "Fine: " << student.book[i].fine << "\n\n";
+				*output << "Fine: RM" << student.book[i].fine << "\n\n";
 			}
 		}
 
@@ -607,7 +623,10 @@ bool Display(List* list, int source, int detail) {
 
 		cur = cur->next;
 	}
-	outputFile.close();
+
+	if (source == 1) {
+		outputFile.close();
+	}
 	return true;
 
 }
