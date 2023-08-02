@@ -62,7 +62,7 @@ int main() {
 				cout << "Unable to delete ID" << endl;
 			break;
 		case 3: // Search Student
-			cout << " Enter Student ID: ";
+			cout << "Enter Student ID: ";
 			cin >> id;
 			cout << endl;
 			if (SearchStudent(&stuList, id, stu)) {
@@ -77,10 +77,13 @@ int main() {
 
 			break;
 		case 4: // Insert book	
-			if (InsertBook(filename, &stuList))
-				cout << "Books inserted successfully!" << endl;
-			else	
+			if (InsertBook(filename, &stuList)) {
+			
+				cout << "\nBooks inserted successfully!" << endl;
+			}
+			else
 				cout << "Error inserting books." << endl;
+			
 
 			system("pause");
 			system("cls");
@@ -108,6 +111,9 @@ int main() {
 			break;
 		case 6: // Compute and Display Statistics
 			computeAndDisplayStatistics(&stuList);
+
+			system("pause");
+			system("cls");
 			break;
 
 		case 7: // print Stu With Same Book
@@ -305,7 +311,7 @@ bool DeleteRecord(List *stuList, char *ID) {
 bool InsertBook(string filename, List* list) {
 	ifstream bookFile(filename);
 	if (!bookFile) {
-		cout << "Error opening book.txt!\n";
+		cout << "Error opening book.txt\n";
 		return false;
 	}
 	else {
@@ -661,7 +667,7 @@ bool computeAndDisplayStatistics(List* list) {
 	int CStotalBook = 0, IAtotalBook = 0, IBtotalBook = 0, CNtotalBook = 0, CTtotalBook = 0;
 	int CStotalOverDueBook = 0, IAtotalOverDueBook = 0, IBtotalOverDueBook = 0, CNtotalOverDueBook = 0, CTtotalOverDueBook = 0;
 	double CStotalFine = 0, IAtotalFine = 0, IBtotalFine = 0, CNtotalFine = 0, CTtotalFine = 0;
-	/*LibStudent& student = cur->item;*/
+	
 
 	if (cur == NULL) {
 		cout << "The list is empty. Please READ FILE first!!" << endl;
