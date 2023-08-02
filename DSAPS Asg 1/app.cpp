@@ -107,6 +107,7 @@ int main() {
 			system("cls");
 			break;
 		case 6: // Compute and Display Statistics
+			computeAndDisplayStatistics(&stuList);
 			break;
 
 		case 7: // print Stu With Same Book
@@ -652,3 +653,104 @@ bool Display(List* list, int source, int detail) {
 	return true;
 
 }
+
+bool computeAndDisplayStatistics(List* list) {
+	Node* cur;
+	cur = list->head;
+	int CS = 0, IA = 0, IB = 0, CN = 0, CT = 0;
+	int CStotalBook = 0, IAtotalBook = 0, IBtotalBook = 0, CNtotalBook = 0, CTtotalBook = 0;
+	int CStotalOverDueBook = 0, IAtotalOverDueBook = 0, IBtotalOverDueBook = 0, CNtotalOverDueBook = 0, CTtotalOverDueBook = 0;
+	double CStotalFine = 0, IAtotalFine = 0, IBtotalFine = 0, CNtotalFine = 0, CTtotalFine = 0;
+	/*LibStudent& student = cur->item;*/
+
+	if (cur == NULL) {
+		cout << "The list is empty. Please READ FILE first!!" << endl;
+		return false;
+	}
+
+	
+
+		while (cur != NULL) {
+			LibStudent& student = cur->item;
+			int overdueBooks = 0;
+
+			if (strcmp(student.course, "CS") == 0) {
+				CS++;
+				CStotalBook += student.totalbook;
+
+				for (int i = 0; i < student.totalbook; i++) {
+					if (student.book[i].fine != NULL) {
+						overdueBooks++;
+						CStotalFine += student.book[i].fine;
+					}
+				}
+				CStotalOverDueBook += overdueBooks;
+
+			}
+			else if (strcmp(student.course, "IA") == 0) {
+				IA++;
+				IAtotalBook += student.totalbook;
+				for (int i = 0; i < student.totalbook; i++) {
+					if (student.book[i].fine != NULL) {
+						overdueBooks++;
+						IAtotalFine += student.book[i].fine;
+					}
+				}
+				IAtotalOverDueBook += overdueBooks;
+				
+			}
+			else if (strcmp(student.course, "IB") == 0) {
+				IB++;
+				IBtotalBook += student.totalbook;
+				for (int i = 0; i < student.totalbook; i++) {
+					if (student.book[i].fine != NULL) {
+						overdueBooks++;
+						IBtotalFine += student.book[i].fine;
+					}
+				}
+				IBtotalOverDueBook += overdueBooks;
+				
+			}
+			else if (strcmp(student.course, "CN") == 0) {
+				CN++;
+				CNtotalBook += student.totalbook;
+				for (int i = 0; i < student.totalbook; i++) {
+					if (student.book[i].fine != NULL) {
+						overdueBooks++;
+						CNtotalFine += student.book[i].fine;
+					}
+				}
+				CNtotalOverDueBook += overdueBooks;
+			
+			}
+			else if (strcmp(student.course, "CT") == 0) {
+				CT++;
+				CTtotalBook += student.totalbook;
+				for (int i = 0; i < student.totalbook; i++) {
+					if (student.book[i].fine != NULL) {
+						overdueBooks++;
+						CTtotalFine += student.book[i].fine;
+					}
+				}
+				CTtotalOverDueBook += overdueBooks;
+				
+			}
+
+			cur = cur->next;
+		}
+
+		cout << setw(8) << right << "Course " << setw(20) << "Number of Student " << setw(22) << right << "Total Books Borrowed "
+			<< setw(21) << right << "Total Overdue Books " << setw(24) << "Total Overdue Fine(RM)" << endl;
+		cout << setw(8) << right << "CS" << setw(20) << CS << setw(22) << right << CStotalBook
+			<< setw(21) << right << CStotalOverDueBook << setw(24) << CStotalFine << endl;
+		cout << setw(8) << right << "IA" << setw(20) << IA << setw(22) << right << IAtotalBook
+			<< setw(21) << right << IAtotalOverDueBook << setw(24) << IAtotalFine << endl;
+		cout << setw(8) << right << "IB" << setw(20) << IB << setw(22) << right << IBtotalBook
+			<< setw(21) << right << IBtotalOverDueBook << setw(24) << IBtotalFine << endl;
+		cout << setw(8) << right << "CN" << setw(20) << CN << setw(22) << right << CNtotalBook
+			<< setw(21) << right << CNtotalOverDueBook << setw(24) << CNtotalFine << endl;
+		cout << setw(8) << right << "CT" << setw(20) << CT << setw(22) << right << CTtotalBook
+			<< setw(21) << right << CTtotalOverDueBook << setw(24) << CTtotalFine << endl;
+
+		return true;
+	}
