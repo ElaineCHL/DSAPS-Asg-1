@@ -564,7 +564,7 @@ bool Display(List* list, int source, int detail) {
 	}
 
 	else if (source == 2) {
-		if (detail != 1 || detail != 2) {
+		if (detail != 1 && detail != 2) {
 			cout << "Invalid detail input. Use 1 for student info or 2 for book list." << endl;
 			return false;
 		}
