@@ -1,3 +1,4 @@
+
 STUDENT 1
 
 Name: Audrey Chan
@@ -7,6 +8,7 @@ Phone No: 521-3879
 Total Fine: RM0.50
 
 *****************************************************************************
+
 STUDENT 2
 
 Name: Ben Affleck
@@ -16,6 +18,7 @@ Phone No: 432-4579
 Total Fine: RM0.00
 
 *****************************************************************************
+
 STUDENT 3
 
 Name: Ben Ma
@@ -25,24 +28,27 @@ Phone No: 693-2367
 Total Fine: RM6.00
 
 *****************************************************************************
+
 STUDENT 4
 
 Name: Ken Wong
 Id: 1502378
 Course: CS
 Phone No: 892-3765
-Total Fine: RM10.00
+Total Fine: RM0.00
 
 *****************************************************************************
+
 STUDENT 5
 
 Name: Matt Damon
 Id: 1200233
 Course: CS
 Phone No: 790-3233
-Total Fine: RM28.00
+Total Fine: RM8.50
 
 *****************************************************************************
+
 STUDENT 6
 
 Name: Salma Hayek

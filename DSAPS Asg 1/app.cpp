@@ -21,7 +21,9 @@ bool displayWarnedStudent(List*, List*, List*);
 int menu();
 
 bool Redundant(List, LibStudent);
-bool printstuList(List);
+//bool printstuList(List);
+int calculateJulianDate(int, int);
+
 
 int main() {
 	LibStudent stu;
@@ -30,7 +32,11 @@ int main() {
 	string filename = "book.txt";
 	char id[10];
 	char ID[20];
-	
+	if (!ReadFile(fileName, &stuList))
+		cout << "Unable to read " << fileName << "." << endl;
+	if (!InsertBook(filename, &stuList)) {
+		cout << "Error inserting books." << endl;
+	}
 	do {
 		switch (menu()) {
 
@@ -51,16 +57,18 @@ int main() {
 			cin.ignore();
 			cin.getline(ID, 20);
 			if (DeleteRecord(&stuList, ID)) {
-				system("cls");
-				cout << "-----------------------------------" << endl;
-				cout << "     Updated List after Delete" << endl;
-				cout << "-----------------------------------" << endl;
-				if (!printstuList(stuList))
-					cout << "\nCannot print from empty list.\n";
+				cout << ID << " is successfully deleted." << endl;
+				//cout << "-----------------------------------" << endl;
+				//cout << "     Updated List after Delete" << endl;
+				//cout << "-----------------------------------" << endl;
+				/*if (!printstuList(stuList))
+					cout << "\nCannot print from empty list.\n";*/
 			}
 			else
 				cout << "Unable to delete ID" << endl;
+			system("pause");
 			break;
+
 		case 3: // Search Student
 			cout << "Enter Student ID: ";
 			cin >> id;
@@ -74,20 +82,19 @@ int main() {
 			}
 			system("pause");
 			system("cls");
-
 			break;
+
 		case 4: // Insert book	
 			if (InsertBook(filename, &stuList)) {
-			
 				cout << "\nBooks inserted successfully!" << endl;
 			}
 			else
 				cout << "Error inserting books." << endl;
-			
 
 			system("pause");
 			system("cls");
 			break;
+
 		case 5: // Display output
 			system("cls");
 			int source, detail;
@@ -109,6 +116,7 @@ int main() {
 			system("pause");
 			system("cls");
 			break;
+
 		case 6: // Compute and Display Statistics
 			computeAndDisplayStatistics(&stuList);
 
@@ -125,11 +133,7 @@ int main() {
 		case 9: // Exit
 			return 0;
 		}
-
 	} while (1);
-
-	system("pause");
-	return 0;
 }
 
 int menu() {
@@ -184,30 +188,29 @@ bool Redundant(List list, LibStudent item)
 	return false;
 }
 
-bool printstuList(List list)
-{
-	Node* cur;
-
-	if (list.empty())
-	{
-		cout << "\n\nCannot print from an empty list\n";
-		return false;
-	}
-
-	cur = list.head; //start traversing from the first node
-
-	while (cur != NULL)
-	{
-		cur->item.print(cout);
-
-		cur = cur->next; //move to next node in the list
-	}
-	return true;
-}
+//bool printstuList(List list)
+//{
+//	Node* cur;
+//
+//	if (list.empty())
+//	{
+//		cout << "\n\nCannot print from an empty list\n";
+//		return false;
+//	}
+//
+//	cur = list.head; //start traversing from the first node
+//
+//	while (cur != NULL)
+//	{
+//		cur->item.print(cout);
+//
+//		cur = cur->next; //move to next node in the list
+//	}
+//	return true;
+//}
 
 bool ReadFile(string filename, List* stuList) {
 	LibStudent student;
-
 	string file = filename;
 	ifstream inFile(file);
 
@@ -249,14 +252,12 @@ bool ReadFile(string filename, List* stuList) {
 
 		if (!Redundant(*stuList, student))
 		{
-			stuList->insert(count++, student);
-
+			stuList->insert(student);
 		}
-
 		else
 			cout << student.name << " already exist." << endl;
 	}
-	printstuList(*stuList);
+	//printstuList(*stuList);
 	inFile.close();
 
 	return true;
@@ -271,22 +272,17 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 		cout << "\n\nCannot print from an empty list\n";
 		return false;
 	}
-
-	else {
-		while (cur != NULL) {
-			for (int i = 1; i <= list->size(); i++) {
-				if (strcmp(cur->item.id, id) == 0) {
-					list->get(i, stu);
-					return &stu;
-				}
-				cur = cur->next;
+	while (cur != NULL) {
+		for (int i = 1; i <= list->size(); i++) {
+			if (strcmp(cur->item.id, id) == 0) {
+				list->get(i, stu);
+				return true;
 			}
-
+			cur = cur->next;
 		}
-		cout << "\nSTUDENT WITH ID " << id << "IS NOT FOUND IN THE LIST" << endl;
-		return false;
 	}
-
+	cout << "\nSTUDENT WITH ID " << id << " IS NOT FOUND IN THE LIST" << endl;
+	return false;
 }
 
 bool DeleteRecord(List *stuList, char *ID) {
@@ -296,14 +292,12 @@ bool DeleteRecord(List *stuList, char *ID) {
 		stuList->get(i, value);
 		//cout << value.id << " " << endl;
 		if (strcmp(ID, value.id) == 0) {
-			cout << ID << endl;
+			//cout << ID << endl;
 			if(stuList->remove(i)){
 				return true;
 			}
 			return false;
-			
 		}
-		
 	}
 	return false;
 }
@@ -314,228 +308,237 @@ bool InsertBook(string filename, List* list) {
 		cout << "Error opening book.txt\n";
 		return false;
 	}
-	else {
-		// Read book.txt
-		while (!bookFile.eof()) {
-			char studentId[10];
-			char author[256];
-			char title[256];
-			char publisher[30];
-			char ISBN[11];
-			int yearPublished;
-			char callNum[20];
-			char borrowDate[10];
-			char dueDate[10];
-			int borrowDay = 0, borrowMonth = 0, borrowYear = 0;
-			int dueDay = 0, dueMonth = 0, dueYear = 0;
-			int x = 0, y = 0;
-			char day[5] = "", month[5] = "", year[5] = "";
-
-			bookFile >> studentId >> author >> title >> publisher >>
-				ISBN >> yearPublished >> callNum >> borrowDate >> dueDate;
-
-			// Read the date a book is borrowed
-			for (int i = 0; i < strlen(borrowDate); i++)
-			{
-				if (borrowDate[i] != '/') // Identify the part of day, month and year
-				{
-					if (x == 0)
-					{
-						day[y] = borrowDate[i];
-						y++;
-					}
-					if (x == 1)
-					{
-						month[y] = borrowDate[i];
-						y++;
-					}
-					if (x == 2)
-					{
-						year[y] = borrowDate[i];
-						y++;
-					}
-				}
-				if (borrowDate[i] == '/' || i == strlen(borrowDate) - 1) // Check if the date has completed read
-				{
-					cout << " ";
-					if (x == 0)
-					{
-						day[y] = '\0';
-						borrowDay = atoi(day); // convert to integer
-					}
-					if (x == 1)
-					{
-						month[y] = '\0';
-						borrowMonth = atoi(month);
-					}
-					if (x == 2)
-					{
-						year[y] = '\0';
-						borrowYear = atoi(year);
-					}
-					y = 0;
-					x++;
-				}
-			}
-
-			// Read the date a book is due
-			int c = 0, d = 0;
-			for (int i = 0; i < strlen(dueDate); i++)
-			{	
-				if (dueDate[i] != '/') // Identify the part of day, month and year
-				{
-					if (c == 0)
-					{
-						day[d] = dueDate[i];
-						d++;
-					}
-					if (c == 1)
-					{
-						month[d] = dueDate[i];
-						d++;
-					}
-					if (c == 2)
-					{
-						year[d] = dueDate[i];
-						d++;
-					}
-				}
-				if (dueDate[i] == '/' || i == strlen(dueDate) - 1) // Check if the date has completed read
-				{
-					if (c == 0)
-					{
-						day[d] = '\0';
-						dueDay = atoi(day); // Convert to integer
-					}
-					if (c == 1)
-					{
-						month[d] = '\0';
-						dueMonth = atoi(month); 
-					}
-					if (c == 2)
-					{
-						year[d] = '\0';
-						dueYear = atoi(year); 
-					}
-					d = 0;
-					c++;
-				}
-			}
-			// Assuming each month has 30 days
-			// Assuming current date is 29/3/2020
-			int dueJulianDay = 0;
-			int curJulianDay = 29 + 3 * 30 + 2020 * 360;			
-			dueJulianDay = dueDay + dueMonth * 30 + dueYear * 360;
-
-			// Calculate the fine
-			double fine = 0.00;
-			if (curJulianDay > dueJulianDay) {
-				int daysLate = curJulianDay - dueJulianDay;
-				fine = daysLate * 0.50;
-			}
-
-			// Find the student based on ID and insert the book
-			Node* cur = list->head;
-			if (cur == NULL) {
-				cout << "Please read file first.\n";
-				return false;
-			}		
-			while (cur != NULL) {
-				LibStudent& student = cur->item;
-				if (strcmp(student.id, studentId) == 0) { // Find the student based on ID
-
-					if (student.totalbook < 15) {
-
-						// Check if the student has borrowed any books and detect the empty slot for inserting other books
-						int emptySlotIndex = -1;
-						for (int i = 0; i < 15; i++) {
-
-							if (student.book[i].author[0] == NULL) {
-								emptySlotIndex = i;
-								break;
-							}
-						}
-						if (emptySlotIndex != -1) {
-							// Insert author
-							int a = 0, t = 0;
-							char temp[256] = "";
-							for (int i = 0; i < strlen(author); i++)
-							{
-								if (author[i] == '_')
-								{
-									author[i] = ' '; // Replace underscores with spaces
-								}
-
-								if (author[i] != '/')
-								{
-									temp[t] = author[i];
-									t++;
-								}
-								// Check if the current character is the end of the first author's name or the last character
-								if (author[i] == '/' || i == strlen(author) - 1) 
-								{
-									temp[t] = '\0';
-									t = 0;
-									student.book[emptySlotIndex].author[a] = new char[strlen(temp) + 1]; // Allocate memory for each author name
-									strcpy(student.book[emptySlotIndex].author[a], temp);
-									a++;
-								}
-							}
-
-							// Insert title
-							strcpy(student.book[emptySlotIndex].title, title);
-							for (int i = 0; i < strlen(student.book[emptySlotIndex].title); i++) {
-								if (student.book[emptySlotIndex].title[i] == '_')
-								{
-									student.book[emptySlotIndex].title[i] = ' '; // Replace underscores with spaces
-								}
-							}
-
-							// Insert publisher
-							strcpy(student.book[emptySlotIndex].publisher, publisher);
-							for (int i = 0; i < strlen(student.book[emptySlotIndex].publisher); i++) {
-								if (student.book[emptySlotIndex].publisher[i] == '_')
-								{
-									student.book[emptySlotIndex].publisher[i] = ' '; // Replace underscores with spaces
-								}
-							}
-							
-							// Insert ISBN
-							strcpy(student.book[emptySlotIndex].ISBN, ISBN);
-
-							// Insert year published
-							student.book[emptySlotIndex].yearPublished = yearPublished;
-
-							// Inser call number
-							strcpy(student.book[emptySlotIndex].callNum, callNum);
-
-							// Insert the date a book is borrowed
-							student.book[emptySlotIndex].borrow.day = borrowDay;
-							student.book[emptySlotIndex].borrow.month = borrowMonth;
-							student.book[emptySlotIndex].borrow.year = borrowYear;
-
-							// Insert the date a book is due
-							student.book[emptySlotIndex].due.day = dueDay;
-							student.book[emptySlotIndex].due.month = dueMonth;
-							student.book[emptySlotIndex].due.year = dueYear;
-
-							// Insert fine
-							student.book[emptySlotIndex].fine = fine;
-						}
-						student.totalbook++;
-						student.total_fine = student.calculateTotalFine();
-						
-					}
-					else {
-						cout << "Student with ID: " << studentId << " already borrowed maximum books (15)." << endl;
-					}
-				}
-				cur = cur->next;
-			}			
-		}
-		bookFile.close();
-		return true;
+	Node* temp;
+	for (temp = list->head; temp != NULL; temp = temp->next) {
+		temp->item.totalbook = 0;
 	}
+
+	// Read book.txt
+	while (!bookFile.eof()) {
+		char studentId[10];
+		char author[256];
+		char title[256];
+		char publisher[30];
+		char ISBN[11];
+		int yearPublished;
+		char callNum[20];
+		char borrowDate[10];
+		char dueDate[10];
+		int borrowDay = 0, borrowMonth = 0, borrowYear = 0;
+		int dueDay = 0, dueMonth = 0, dueYear = 0;
+		int x = 0, y = 0;
+		char day[5] = "", month[5] = "", year[5] = "";
+
+		bookFile >> studentId >> author >> title >> publisher >>
+			ISBN >> yearPublished >> callNum >> borrowDate >> dueDate;
+
+		// Read the date a book is borrowed
+		for (int i = 0; i < strlen(borrowDate); i++)
+		{
+			if (borrowDate[i] != '/') // Identify the part of day, month and year
+			{
+				if (x == 0)
+				{
+					day[y] = borrowDate[i];
+					y++;
+				}
+				if (x == 1)
+				{
+					month[y] = borrowDate[i];
+					y++;
+				}
+				if (x == 2)
+				{
+					year[y] = borrowDate[i];
+					y++;
+				}
+			}
+			if (borrowDate[i] == '/' || i == strlen(borrowDate) - 1) // Check if the date has completed read
+			{
+				cout << " ";
+				if (x == 0)
+				{
+					day[y] = '\0';
+					borrowDay = atoi(day); // convert to integer
+				}
+				if (x == 1)
+				{
+					month[y] = '\0';
+					borrowMonth = atoi(month);
+				}
+				if (x == 2)
+				{
+					year[y] = '\0';
+					borrowYear = atoi(year);
+				}
+				y = 0;
+				x++;
+			}
+		}
+
+		// Read the date a book is due
+		int c = 0, d = 0;
+		for (int i = 0; i < strlen(dueDate); i++)
+		{
+			if (dueDate[i] != '/') // Identify the part of day, month and year
+			{
+				if (c == 0)
+				{
+					day[d] = dueDate[i];
+					d++;
+				}
+				if (c == 1)
+				{
+					month[d] = dueDate[i];
+					d++;
+				}
+				if (c == 2)
+				{
+					year[d] = dueDate[i];
+					d++;
+				}
+			}
+			if (dueDate[i] == '/' || i == strlen(dueDate) - 1) // Check if the date has completed read
+			{
+				if (c == 0)
+				{
+					day[d] = '\0';
+					dueDay = atoi(day); // Convert to integer
+				}
+				if (c == 1)
+				{
+					month[d] = '\0';
+					dueMonth = atoi(month);
+				}
+				if (c == 2)
+				{
+					year[d] = '\0';
+					dueYear = atoi(year);
+				}
+				d = 0;
+				c++;
+			}
+		}
+		// Assuming each month has 30 days
+		// Assuming current date is 29/3/2020
+
+		/*int dueJulianDay = 0;
+		int curJulianDay = 29 + 3 * 30 + 2020 * 360;
+		dueJulianDay = dueDay + dueMonth * 30 + dueYear * 360;*/
+		int daysLate = calculateJulianDate(29, 3) - calculateJulianDate(dueDay, dueMonth);
+		double fine = 0.0;
+		if (daysLate > 0) {
+			 fine = daysLate * 0.5;
+		}
+		// Calculate the fine
+		/*double fine = 0.00;
+		if (curJulianDay > dueJulianDay) {
+			int daysLate = curJulianDay - dueJulianDay;
+			fine = daysLate * 0.50;
+		}*/
+
+		// Find the student based on ID and insert the book
+		Node* cur = list->head;
+		if (cur == NULL) {
+			cout << "Please read file first.\n";
+			return false;
+		}
+		while (cur != NULL) {
+			LibStudent& student = cur->item;
+			if (strcmp(student.id, studentId) == 0) { // Find the student based on ID
+				
+				if (student.totalbook < 15) {
+					
+					// Check if the student has borrowed any books and detect the empty slot for inserting other books
+					int emptySlotIndex = -1;
+					for (int i = 0; i < 15; i++) {
+
+						if (student.book[i].author[0] == NULL) {
+							emptySlotIndex = i;
+							break;
+						}
+					}
+					if (emptySlotIndex != -1) {
+						
+						// Insert author
+						int a = 0, t = 0;
+						char temp[256] = "";
+						for (int i = 0; i < strlen(author); i++)
+						{
+							if (author[i] == '_')
+							{
+								author[i] = ' '; // Replace underscores with spaces
+							}
+
+							if (author[i] != '/')
+							{
+								temp[t] = author[i];
+								t++;
+							}
+							// Check if the current character is the end of the first author's name or the last character
+							if (author[i] == '/' || i == strlen(author) - 1)
+							{
+								temp[t] = '\0';
+								t = 0;
+								student.book[emptySlotIndex].author[a] = new char[strlen(temp) + 1]; // Allocate memory for each author name
+								strcpy(student.book[emptySlotIndex].author[a], temp);
+								a++;
+							}
+						}
+
+						// Insert title
+						strcpy(student.book[emptySlotIndex].title, title);
+						for (int i = 0; i < strlen(student.book[emptySlotIndex].title); i++) {
+							if (student.book[emptySlotIndex].title[i] == '_')
+							{
+								student.book[emptySlotIndex].title[i] = ' '; // Replace underscores with spaces
+							}
+						}
+
+						// Insert publisher
+						strcpy(student.book[emptySlotIndex].publisher, publisher);
+						for (int i = 0; i < strlen(student.book[emptySlotIndex].publisher); i++) {
+							if (student.book[emptySlotIndex].publisher[i] == '_')
+							{
+								student.book[emptySlotIndex].publisher[i] = ' '; // Replace underscores with spaces
+							}
+						}
+
+						// Insert ISBN
+						strcpy(student.book[emptySlotIndex].ISBN, ISBN);
+
+						// Insert year published
+						student.book[emptySlotIndex].yearPublished = yearPublished;
+
+						// Inser call number
+						strcpy(student.book[emptySlotIndex].callNum, callNum);
+
+						// Insert the date a book is borrowed
+						student.book[emptySlotIndex].borrow.day = borrowDay;
+						student.book[emptySlotIndex].borrow.month = borrowMonth;
+						student.book[emptySlotIndex].borrow.year = borrowYear;
+
+						// Insert the date a book is due
+						student.book[emptySlotIndex].due.day = dueDay;
+						student.book[emptySlotIndex].due.month = dueMonth;
+						student.book[emptySlotIndex].due.year = dueYear;
+
+						// Insert fine
+						student.book[emptySlotIndex].fine = fine;
+					}
+					student.totalbook++;
+					student.total_fine = student.calculateTotalFine();
+
+				}
+				else {
+					cout << "Student with ID: " << studentId << " already borrowed maximum books (15)." << endl;
+				}
+			}
+			cur = cur->next;
+		}
+	}
+	bookFile.close();
+	return true;
 }
 
 bool Display(List* list, int source, int detail) {
@@ -600,17 +603,6 @@ bool Display(List* list, int source, int detail) {
 		cur = cur->next;
 	}
 
-	// Sort the students' names using Bubble Sort
-	for (int i = 0; i < studentCount - 1; i++) {
-		for (int j = 0; j < studentCount - i - 1; j++) {
-			if (strcmp(studentArray[j]->name, studentArray[j + 1]->name) > 0) {
-				LibStudent* temp = studentArray[j];
-				studentArray[j] = studentArray[j + 1];
-				studentArray[j + 1] = temp;
-			}
-		}
-	}
-
 	// Display the sorted students from the array
 	int stuNum = 1;
 	for (int i = 0; i < studentCount; i++) {
@@ -618,36 +610,18 @@ bool Display(List* list, int source, int detail) {
 
 		// Calculate total fine before displaying it
 		student->calculateTotalFine();
-		*output << "STUDENT " << stuNum++ << "\n\n";
-		*output << "Name: " << student->name << endl;
-		*output << "Id: " << student->id << endl;
-		*output << "Course: " << student->course << endl;
-		*output << "Phone No: " << student->phone_no << endl;
-		*output << "Total Fine: RM" << fixed << setprecision(2) << student->total_fine << endl;
+		*output << "\nSTUDENT " << stuNum++;
+		student->print(*output);
 		*output << endl;
 
 		if (detail == 1) {
 			*output << "BOOK LIST:" << "\n\n";
 			for (int i = 0; i < student->totalbook; i++) {
-				*output << "BOOK " << i + 1 << "\n\n";
-				*output << "Title: " << student->book[i].title << endl;
-				*output << "Author: ";
-				for (int j = 0; j < 10; j++) {
-					if (student->book[i].author[j] != NULL) {
-						*output << student->book[i].author[j] << "\t";
-					}
-				}
+				*output << "BOOK " << i + 1 << "\n";
+				student->book[i].print(*output);
 				*output << endl;
-				*output << "Publisher: " << student->book[i].publisher << endl;
-				*output << "Year Published: " << student->book[i].yearPublished << endl;
-				*output << "ISBN: " << student->book[i].ISBN << endl;
-				*output << "Call Number: " << student->book[i].callNum << endl;
-				*output << "Borrow Date: " << student->book[i].borrow.day << "/" << student->book[i].borrow.month << "/" << student->book[i].borrow.year << endl;
-				*output << "Due Date: " << student->book[i].due.day << "/" << student->book[i].due.month << "/" << student->book[i].due.year << endl;
-				*output << "Fine: RM" << fixed << setprecision(2) << student->book[i].fine << "\n\n";
 			}
 		}
-
 		*output << "*****************************************************************************" << endl;
 	}
 	// Clean up the dynamically allocated memory
@@ -657,7 +631,6 @@ bool Display(List* list, int source, int detail) {
 		outputFile.close();
 	}
 	return true;
-
 }
 
 bool computeAndDisplayStatistics(List* list) {
@@ -667,96 +640,118 @@ bool computeAndDisplayStatistics(List* list) {
 	int CStotalBook = 0, IAtotalBook = 0, IBtotalBook = 0, CNtotalBook = 0, CTtotalBook = 0;
 	int CStotalOverDueBook = 0, IAtotalOverDueBook = 0, IBtotalOverDueBook = 0, CNtotalOverDueBook = 0, CTtotalOverDueBook = 0;
 	double CStotalFine = 0, IAtotalFine = 0, IBtotalFine = 0, CNtotalFine = 0, CTtotalFine = 0;
-	
 
 	if (cur == NULL) {
 		cout << "The list is empty. Please READ FILE first!!" << endl;
 		return false;
 	}
+	while (cur != NULL) {
+		LibStudent& student = cur->item;
+		int overdueBooks = 0;
 
-	
+		if (strcmp(student.course, "CS") == 0) {
+			CS++;
+			CStotalBook += student.totalbook;
 
-		while (cur != NULL) {
-			LibStudent& student = cur->item;
-			int overdueBooks = 0;
-
-			if (strcmp(student.course, "CS") == 0) {
-				CS++;
-				CStotalBook += student.totalbook;
-
-				for (int i = 0; i < student.totalbook; i++) {
-					if (student.book[i].fine != NULL) {
-						overdueBooks++;
-						CStotalFine += student.book[i].fine;
-					}
+			for (int i = 0; i < student.totalbook; i++) {
+				if (student.book[i].fine != NULL) {
+					overdueBooks++;
+					CStotalFine += student.book[i].fine;
 				}
-				CStotalOverDueBook += overdueBooks;
+			}
+			CStotalOverDueBook += overdueBooks;
 
-			}
-			else if (strcmp(student.course, "IA") == 0) {
-				IA++;
-				IAtotalBook += student.totalbook;
-				for (int i = 0; i < student.totalbook; i++) {
-					if (student.book[i].fine != NULL) {
-						overdueBooks++;
-						IAtotalFine += student.book[i].fine;
-					}
-				}
-				IAtotalOverDueBook += overdueBooks;
-				
-			}
-			else if (strcmp(student.course, "IB") == 0) {
-				IB++;
-				IBtotalBook += student.totalbook;
-				for (int i = 0; i < student.totalbook; i++) {
-					if (student.book[i].fine != NULL) {
-						overdueBooks++;
-						IBtotalFine += student.book[i].fine;
-					}
-				}
-				IBtotalOverDueBook += overdueBooks;
-				
-			}
-			else if (strcmp(student.course, "CN") == 0) {
-				CN++;
-				CNtotalBook += student.totalbook;
-				for (int i = 0; i < student.totalbook; i++) {
-					if (student.book[i].fine != NULL) {
-						overdueBooks++;
-						CNtotalFine += student.book[i].fine;
-					}
-				}
-				CNtotalOverDueBook += overdueBooks;
-			
-			}
-			else if (strcmp(student.course, "CT") == 0) {
-				CT++;
-				CTtotalBook += student.totalbook;
-				for (int i = 0; i < student.totalbook; i++) {
-					if (student.book[i].fine != NULL) {
-						overdueBooks++;
-						CTtotalFine += student.book[i].fine;
-					}
-				}
-				CTtotalOverDueBook += overdueBooks;
-				
-			}
-
-			cur = cur->next;
 		}
+		else if (strcmp(student.course, "IA") == 0) {
+			IA++;
+			IAtotalBook += student.totalbook;
+			for (int i = 0; i < student.totalbook; i++) {
+				if (student.book[i].fine != NULL) {
+					overdueBooks++;
+					IAtotalFine += student.book[i].fine;
+				}
+			}
+			IAtotalOverDueBook += overdueBooks;
 
-		cout << setw(8) << right << "Course " << setw(20) << "Number of Student " << setw(22) << right << "Total Books Borrowed "
-			<< setw(21) << right << "Total Overdue Books " << setw(24) << "Total Overdue Fine(RM)" << endl;
-		cout << setw(8) << right << "CS" << setw(20) << CS << setw(22) << right << CStotalBook
-			<< setw(21) << right << CStotalOverDueBook << setw(24) << CStotalFine << endl;
-		cout << setw(8) << right << "IA" << setw(20) << IA << setw(22) << right << IAtotalBook
-			<< setw(21) << right << IAtotalOverDueBook << setw(24) << IAtotalFine << endl;
-		cout << setw(8) << right << "IB" << setw(20) << IB << setw(22) << right << IBtotalBook
-			<< setw(21) << right << IBtotalOverDueBook << setw(24) << IBtotalFine << endl;
-		cout << setw(8) << right << "CN" << setw(20) << CN << setw(22) << right << CNtotalBook
-			<< setw(21) << right << CNtotalOverDueBook << setw(24) << CNtotalFine << endl;
-		cout << setw(8) << right << "CT" << setw(20) << CT << setw(22) << right << CTtotalBook
-			<< setw(21) << right << CTtotalOverDueBook << setw(24) << CTtotalFine << endl;
+		}
+		else if (strcmp(student.course, "IB") == 0) {
+			IB++;
+			IBtotalBook += student.totalbook;
+			for (int i = 0; i < student.totalbook; i++) {
+				if (student.book[i].fine != NULL) {
+					overdueBooks++;
+					IBtotalFine += student.book[i].fine;
+				}
+			}
+			IBtotalOverDueBook += overdueBooks;
 
-		return true;
+		}
+		else if (strcmp(student.course, "CN") == 0) {
+			CN++;
+			CNtotalBook += student.totalbook;
+			for (int i = 0; i < student.totalbook; i++) {
+				if (student.book[i].fine != NULL) {
+					overdueBooks++;
+					CNtotalFine += student.book[i].fine;
+				}
+			}
+			CNtotalOverDueBook += overdueBooks;
+
+		}
+		else if (strcmp(student.course, "CT") == 0) {
+			CT++;
+			CTtotalBook += student.totalbook;
+			for (int i = 0; i < student.totalbook; i++) {
+				if (student.book[i].fine != NULL) {
+					overdueBooks++;
+					CTtotalFine += student.book[i].fine;
+				}
+			}
+			CTtotalOverDueBook += overdueBooks;
+		}
+		cur = cur->next;
 	}
+
+	cout << setw(10) << right << "Course " << setw(25) << "Number of Student " << setw(25) << right << "Total Books Borrowed "
+		<< setw(25) << right << "Total Overdue Books " << setw(28) << "Total Overdue Fine(RM)" << endl;
+	cout << setw(8) << right << "CS" << setw(20) << CS << setw(22) << right << CStotalBook
+		<< setw(21) << right << CStotalOverDueBook << setw(28) << CStotalFine << endl;
+	cout << setw(8) << right << "IA" << setw(20) << IA << setw(22) << right << IAtotalBook
+		<< setw(21) << right << IAtotalOverDueBook << setw(28) << IAtotalFine << endl;
+	cout << setw(8) << right << "IB" << setw(20) << IB << setw(22) << right << IBtotalBook
+		<< setw(21) << right << IBtotalOverDueBook << setw(28) << IBtotalFine << endl;
+	cout << setw(8) << right << "CN" << setw(20) << CN << setw(22) << right << CNtotalBook
+		<< setw(21) << right << CNtotalOverDueBook << setw(28) << CNtotalFine << endl;
+	cout << setw(8) << right << "CT" << setw(20) << CT << setw(22) << right << CTtotalBook
+		<< setw(21) << right << CTtotalOverDueBook << setw(28) << CTtotalFine << endl;
+
+	return true;
+}
+
+int calculateJulianDate(int day, int month) { // julian date according to the year 2022
+	switch (month) {
+	case 12:
+		day += 30;
+	case 11:
+		day += 31;
+	case 10:
+		day += 30;
+	case 9:
+		day += 31;
+	case 8:
+		day += 31;
+	case 7:
+		day += 30;
+	case 6:
+		day += 31;
+	case 5:
+		day += 30;
+	case 4:
+		day += 31;
+	case 3:
+		day += 29;
+	case 2:
+		day += 31;
+	}
+	return day;
+}
