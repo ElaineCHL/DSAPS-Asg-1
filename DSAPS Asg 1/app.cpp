@@ -21,12 +21,14 @@ bool displayWarnedStudent(List*, List*, List*);
 int menu();
 
 bool Redundant(List, LibStudent);
-int calculateJulianDate(int, int);
+int calcJulianDate(int, int);
 
 
 int main() {
 	LibStudent stu;
 	List* stuList = new List;
+	List* type1 = new List; // used in displayWarnedStudent function
+	List* type2 = new List; // used in displayWarnedStudent function
 	string fileName = "student.txt";
 	string filename = "book.txt";
 	char id[10];
@@ -119,12 +121,28 @@ int main() {
 			break;
 
 		case 7: // print Stu With Same Book
-			cout << "Enter the call number of the book: ";
+			cout << "\nEnter the call number of book: ";
 			cin >> callNum;
-			//printStuWithSameBook(stuList, callNum);
+			if(!printStuWithSameBook(stuList, callNum)) {
+				cout << "Print failed.\n\n";
+			}
+
+			system("pause");
+			system("cls");
 			break;
 
 		case 8: // Display warned student
+			if (!displayWarnedStudent(stuList, type1, type2))
+				cout << "Unable to display warned student." << endl;
+
+			if (!Display(type1, 2, 1)) { // display type1 in the screen with student info and book list.
+				cout << "List type1 is empty." << endl;
+			}
+			cout << "\n\n";
+
+			if (!Display(type2, 2, 1)) { // display type2 in the screen with student info and book list.
+				cout << "List type2 is empty." << endl;
+			}
 			break;
 
 		case 9: // Exit
@@ -152,15 +170,15 @@ int menu() {
 	cout << "Please input your option: ";
 	cin >> option;
 
+	while (option < 1 || option > 9) {
+		cout << "Out of range! Enter again: ";
+		cin >> option;
+	}
+
 	while (cin.fail()) {
 		cin.clear();
 		cin.ignore(100, '\n');
 		cout << "Not an integer! Enter again: ";
-		cin >> option;
-	}
-
-	while (option < 1 || option > 9) {
-		cout << "Out of range! Enter again: ";
 		cin >> option;
 	}
 	return option;
@@ -390,7 +408,7 @@ bool InsertBook(string filename, List* list) {
 		}
 
 		// Assuming current date is 29/3/2020
-		int daysLate = calculateJulianDate(29, 3) - calculateJulianDate(dueDay, dueMonth);
+		int daysLate = calcJulianDate(29, 3) - calcJulianDate(dueDay, dueMonth);
 		double fine = 0.0;
 
 		// Calculate the fine
@@ -503,9 +521,9 @@ bool InsertBook(string filename, List* list) {
 }
 
 bool Display(List* list, int source, int detail) {
-	if (list == NULL) {
+	if (list->empty()) {
 		cout << "Error: List is empty." << endl;
-		return false();
+		return false;
 	}
 	// Create an output stream (file or screen)
 	ostream* output;
@@ -690,7 +708,7 @@ bool computeAndDisplayStatistics(List* list) {
 }
 
 // used in insert book function
-int calculateJulianDate(int day, int month) { // julian date according to the year 2022
+int calcJulianDate(int day, int month) { // julian date according to the year 2022
 	switch (month) {
 	case 12:
 		day += 30;
@@ -716,4 +734,81 @@ int calculateJulianDate(int day, int month) { // julian date according to the ye
 		day += 31;
 	}
 	return day;
+}
+
+bool printStuWithSameBook(List* list, char* callNum) {
+	int studentCounter = 0;
+	if (list->empty()) {
+		cout << "List is empty." << endl;
+		return false;
+	}
+	Node* cur = list->head;
+	while (cur != NULL) {
+		for (int i = 0; i < cur->item.totalbook; i++) {
+			if (strcmp(cur->item.book[i].callNum, callNum) == 0) {
+				studentCounter++;
+			}
+		}
+		cur = cur->next;
+	}
+	if (studentCounter == 0) {
+		cout << "\nNo student has borrowed book of call num " << callNum << "\n\n";
+		return false;
+	}
+	else {
+		cout << "\nThere are " << studentCounter << " students that borrow the book with call number "
+			<< callNum << " as shown below:\n\n";
+		cur = list->head;
+		while (cur != NULL) {
+			for (int i = 0; i < cur->item.totalbook; i++) {
+				if (strcmp(cur->item.book[i].callNum, callNum) == 0) {
+					cout << "Student Id = " << cur->item.id << endl;
+					cout << "Name = " << cur->item.name << endl;
+					cout << "Course = " << cur->item.course << endl;
+					cout << "Phone Number = " << cur->item.phone_no << endl;
+					cout << "Borrow Date: " << cur->item.book[i].borrow.day
+						<< "/" << cur->item.book[i].borrow.month << "/"
+						<< cur->item.book[i].borrow.year << endl;
+					cout << "Due Date: " << cur->item.book[i].due.day
+						<< "/" << cur->item.book[i].due.month << "/"
+						<< cur->item.book[i].due.year << endl;
+					cout << "\n\n";
+				}
+			}
+			cur = cur->next;
+		}
+	}
+	return true;
+}
+
+bool displayWarnedStudent(List* list, List* type1, List* type2) {
+	int daysDue = 0;
+	int tenDaysOverdueBooks = 0;
+	int overdueBooks = 0;
+	if (list->empty()) {
+		return false;
+	}
+	Node* cur = list->head;
+	for (; cur != NULL; cur = cur->next) {
+		overdueBooks = 0; // reset the number of overdued books for every student before reading in the input
+		tenDaysOverdueBooks = 0;
+		for (int i = 0; i < cur->item.totalbook; i++) {
+			daysDue = calcJulianDate(cur->item.book[i].due.day, cur->item.book[i].due.month) - calcJulianDate(29, 3);
+			if (daysDue >= 10) {
+				tenDaysOverdueBooks++;
+			}
+			if (daysDue > 0) {
+				overdueBooks++;
+			}
+		}
+		if (tenDaysOverdueBooks > 2) {
+			type1->insert(cur->item);
+			cur->item.print(cout);
+		}
+		if ((overdueBooks == cur->item.totalbook) && (cur->item.total_fine > 50)) {
+			type2->insert(cur->item);
+			cur->item.print(cout);
+		}
+	}
+	return true;
 }
