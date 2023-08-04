@@ -21,27 +21,27 @@ bool displayWarnedStudent(List*, List*, List*);
 int menu();
 
 bool Redundant(List, LibStudent);
-//bool printstuList(List);
 int calculateJulianDate(int, int);
 
 
 int main() {
 	LibStudent stu;
-	List stuList;
+	List* stuList = new List;
 	string fileName = "student.txt";
 	string filename = "book.txt";
 	char id[10];
 	char ID[20];
-	if (!ReadFile(fileName, &stuList))
+	char* callNum = new char; // used in printStuWithSameBook function
+	if (!ReadFile(fileName, stuList))
 		cout << "Unable to read " << fileName << "." << endl;
-	if (!InsertBook(filename, &stuList)) {
+	if (!InsertBook(filename, stuList)) {
 		cout << "Error inserting books." << endl;
 	}
 	do {
 		switch (menu()) {
 
 		case 1: // Read File
-			if (!ReadFile(fileName, &stuList))
+			if (!ReadFile(fileName, stuList))
 				cout << "Unable to read " << fileName << "." << endl;
 
 			else
@@ -52,17 +52,11 @@ int main() {
 
 			break;
 		case 2: // Delete record
-			//ReadFile(fileName, &stuList);
 			cout << "Please input the student ID you wish to delete: ";
 			cin.ignore();
 			cin.getline(ID, 20);
-			if (DeleteRecord(&stuList, ID)) {
+			if (DeleteRecord(stuList, ID)) {
 				cout << ID << " is successfully deleted." << endl;
-				//cout << "-----------------------------------" << endl;
-				//cout << "     Updated List after Delete" << endl;
-				//cout << "-----------------------------------" << endl;
-				/*if (!printstuList(stuList))
-					cout << "\nCannot print from empty list.\n";*/
 			}
 			else
 				cout << "Unable to delete ID" << endl;
@@ -73,19 +67,19 @@ int main() {
 			cout << "Enter Student ID: ";
 			cin >> id;
 			cout << endl;
-			if (SearchStudent(&stuList, id, stu)) {
-				cout << "Name: " << stu.name << endl;
-				cout << "ID: " << stu.id << endl;
-				cout << "Course: " << stu.course << endl;
-				cout << "Phone No: " << stu.phone_no << endl;
-				cout << "Total Fine: " << stu.total_fine << endl;
+			if (SearchStudent(stuList, id, stu)) {
+				/*stu.calculateTotalFine();*/
+				stu.print(cout);
 			}
+			else
+				cout << "\nSTUDENT WITH ID " << id << " IS NOT FOUND IN THE LIST" << endl;
+
 			system("pause");
 			system("cls");
 			break;
 
 		case 4: // Insert book	
-			if (InsertBook(filename, &stuList)) {
+			if (InsertBook(filename, stuList)) {
 				cout << "\nBooks inserted successfully!" << endl;
 			}
 			else
@@ -106,7 +100,7 @@ int main() {
 			cout << endl;
 
 			// Call the Display function here with the appropriate parameters
-			if (Display(&stuList, source, detail)) {
+			if (Display(stuList, source, detail)) {
 				cout << "\nSuccessfully display output.\n\n";
 			}
 			else {
@@ -118,13 +112,16 @@ int main() {
 			break;
 
 		case 6: // Compute and Display Statistics
-			computeAndDisplayStatistics(&stuList);
+			computeAndDisplayStatistics(stuList);
 
 			system("pause");
 			system("cls");
 			break;
 
 		case 7: // print Stu With Same Book
+			cout << "Enter the call number of the book: ";
+			cin >> callNum;
+			//printStuWithSameBook(stuList, callNum);
 			break;
 
 		case 8: // Display warned student
@@ -188,27 +185,6 @@ bool Redundant(List list, LibStudent item)
 	return false;
 }
 
-//bool printstuList(List list)
-//{
-//	Node* cur;
-//
-//	if (list.empty())
-//	{
-//		cout << "\n\nCannot print from an empty list\n";
-//		return false;
-//	}
-//
-//	cur = list.head; //start traversing from the first node
-//
-//	while (cur != NULL)
-//	{
-//		cur->item.print(cout);
-//
-//		cur = cur->next; //move to next node in the list
-//	}
-//	return true;
-//}
-
 bool ReadFile(string filename, List* stuList) {
 	LibStudent student;
 	string file = filename;
@@ -250,18 +226,14 @@ bool ReadFile(string filename, List* stuList) {
 		strcpy_s(student.course, course);
 		strcpy_s(student.phone_no, phone);
 
-		if (!Redundant(*stuList, student))
-		{
+		if (!Redundant(*stuList, student)) {
 			stuList->insert(student);
 		}
 		else
 			cout << student.name << " already exist." << endl;
 	}
-	//printstuList(*stuList);
 	inFile.close();
-
 	return true;
-
 }
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
 
@@ -281,7 +253,6 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 			cur = cur->next;
 		}
 	}
-	cout << "\nSTUDENT WITH ID " << id << " IS NOT FOUND IN THE LIST" << endl;
 	return false;
 }
 
@@ -290,9 +261,7 @@ bool DeleteRecord(List *stuList, char *ID) {
 	type value;
 	for (int i = 1; i <= stuList->size(); i++) {
 		stuList->get(i, value);
-		//cout << value.id << " " << endl;
 		if (strcmp(ID, value.id) == 0) {
-			//cout << ID << endl;
 			if(stuList->remove(i)){
 				return true;
 			}
@@ -419,23 +388,15 @@ bool InsertBook(string filename, List* list) {
 				c++;
 			}
 		}
-		// Assuming each month has 30 days
-		// Assuming current date is 29/3/2020
 
-		/*int dueJulianDay = 0;
-		int curJulianDay = 29 + 3 * 30 + 2020 * 360;
-		dueJulianDay = dueDay + dueMonth * 30 + dueYear * 360;*/
+		// Assuming current date is 29/3/2020
 		int daysLate = calculateJulianDate(29, 3) - calculateJulianDate(dueDay, dueMonth);
 		double fine = 0.0;
+
+		// Calculate the fine
 		if (daysLate > 0) {
 			 fine = daysLate * 0.5;
 		}
-		// Calculate the fine
-		/*double fine = 0.00;
-		if (curJulianDay > dueJulianDay) {
-			int daysLate = curJulianDay - dueJulianDay;
-			fine = daysLate * 0.50;
-		}*/
 
 		// Find the student based on ID and insert the book
 		Node* cur = list->head;
@@ -527,7 +488,7 @@ bool InsertBook(string filename, List* list) {
 						student.book[emptySlotIndex].fine = fine;
 					}
 					student.totalbook++;
-					student.total_fine = student.calculateTotalFine();
+					student.calculateTotalFine();
 
 				}
 				else {
@@ -552,19 +513,19 @@ bool Display(List* list, int source, int detail) {
 	if (source == 1) {
 		if (detail == 1) {
 			outputFile.open("student_booklist.txt"); // Open the file for writing
-			cout << "Successfully display output to student_booklist.txt." << endl;
 			if (!outputFile.is_open()) {
 				cout << "Error opening file for writing." << endl;
 				return false;
 			}
+			cout << "Successfully display output to student_booklist.txt." << endl;
 		}
 		else if (detail == 2) {
 			outputFile.open("student_info.txt"); // Open the file for writing
-			cout << "Successfully display output to student_info.txt." << endl;
 			if (!outputFile.is_open()) {
 				cout << "Error opening file for writing." << endl;
 				return false;
 			}
+			cout << "Successfully display output to student_info.txt." << endl;
 		}
 		else {
 			cout << "Invalid detail input. Use 1 for student info or 2 for book list." << endl;
@@ -609,7 +570,7 @@ bool Display(List* list, int source, int detail) {
 		LibStudent* student = studentArray[i];
 
 		// Calculate total fine before displaying it
-		student->calculateTotalFine();
+		// student->calculateTotalFine();
 		*output << "\nSTUDENT " << stuNum++;
 		student->print(*output);
 		*output << endl;
@@ -728,6 +689,7 @@ bool computeAndDisplayStatistics(List* list) {
 	return true;
 }
 
+// used in insert book function
 int calculateJulianDate(int day, int month) { // julian date according to the year 2022
 	switch (month) {
 	case 12:
