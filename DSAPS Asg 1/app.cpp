@@ -66,9 +66,9 @@ int main() {
 			break;
 
 		case 3: // Search Student
+			cout << endl;
 			cout << "Enter Student ID: ";
 			cin >> id;
-			cout << endl;
 			if (SearchStudent(stuList, id, stu)) {
 				/*stu.calculateTotalFine();*/
 				stu.print(cout);
@@ -114,6 +114,8 @@ int main() {
 			break;
 
 		case 6: // Compute and Display Statistics
+			system("cls");
+			cout << "DISPLAY STATISTICS\n\n";
 			computeAndDisplayStatistics(stuList);
 
 			system("pause");
@@ -263,9 +265,9 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 		return false;
 	}
 	while (cur != NULL) {
-		for (int i = 1; i <= list->size(); i++) {
-			if (strcmp(cur->item.id, id) == 0) {
-				list->get(i, stu);
+		for (int i = 1; i <= list->size(); i++) { 
+			if (strcmp(cur->item.id, id) == 0) { // Compare the student ID of the current node with the provided ID
+				list->get(i, stu); // If match if found, retrieve the student data from the list 
 				return true;
 			}
 			cur = cur->next;
@@ -625,20 +627,21 @@ bool computeAndDisplayStatistics(List* list) {
 		return false;
 	}
 	while (cur != NULL) {
-		LibStudent& student = cur->item;
+		LibStudent& student = cur->item; // Get the student data from the current node 
 		int overdueBooks = 0;
 
+		// Determine the course of the student and update statistics accordingly 
 		if (strcmp(student.course, "CS") == 0) {
 			CS++;
 			CStotalBook += student.totalbook;
 
 			for (int i = 0; i < student.totalbook; i++) {
-				if (student.book[i].fine != NULL) {
+				if (student.book[i].fine != NULL) { // Check if the book has a fine 
 					overdueBooks++;
-					CStotalFine += student.book[i].fine;
+					CStotalFine += student.book[i].fine; // Add the fine amount of the overdue book to the course's total fine
 				}
 			}
-			CStotalOverDueBook += overdueBooks;
+			CStotalOverDueBook += overdueBooks; // Add the count of overdue bookd to the course's total overdue book 
 
 		}
 		else if (strcmp(student.course, "IA") == 0) {
@@ -691,18 +694,24 @@ bool computeAndDisplayStatistics(List* list) {
 		cur = cur->next;
 	}
 
+	// Display the statistics 
 	cout << setw(10) << right << "Course " << setw(25) << "Number of Student " << setw(25) << right << "Total Books Borrowed "
-		<< setw(25) << right << "Total Overdue Books " << setw(28) << "Total Overdue Fine(RM)" << endl;
-	cout << setw(8) << right << "CS" << setw(20) << CS << setw(22) << right << CStotalBook
-		<< setw(21) << right << CStotalOverDueBook << setw(28) << CStotalFine << endl;
-	cout << setw(8) << right << "IA" << setw(20) << IA << setw(22) << right << IAtotalBook
-		<< setw(21) << right << IAtotalOverDueBook << setw(28) << IAtotalFine << endl;
-	cout << setw(8) << right << "IB" << setw(20) << IB << setw(22) << right << IBtotalBook
-		<< setw(21) << right << IBtotalOverDueBook << setw(28) << IBtotalFine << endl;
-	cout << setw(8) << right << "CN" << setw(20) << CN << setw(22) << right << CNtotalBook
-		<< setw(21) << right << CNtotalOverDueBook << setw(28) << CNtotalFine << endl;
-	cout << setw(8) << right << "CT" << setw(20) << CT << setw(22) << right << CTtotalBook
-		<< setw(21) << right << CTtotalOverDueBook << setw(28) << CTtotalFine << endl;
+		<< setw(25) << right << "Total Overdue Books " << setw(29) << "Total Overdue Fine(RM)" << endl;
+	
+	cout << setw(8) << right << "CS" << setw(19) << CS << setw(23) << right << CStotalBook
+		<< setw(28) << right << CStotalOverDueBook << setw(28) << fixed << setprecision(2) << CStotalFine << endl;
+	
+	cout << setw(8) << right << "IA" << setw(19) << IA << setw(23) << right << IAtotalBook
+		<< setw(28) << right << IAtotalOverDueBook << setw(28) << fixed << setprecision(2) << IAtotalFine << endl;
+	
+	cout << setw(8) << right << "IB" << setw(19) << IB << setw(23) << right << IBtotalBook
+		<< setw(28) << right << IBtotalOverDueBook << setw(28) << fixed << setprecision(2) << IBtotalFine << endl;
+	
+	cout << setw(8) << right << "CN" << setw(19) << CN << setw(23) << right << CNtotalBook
+		<< setw(28) << right << CNtotalOverDueBook << setw(28) << fixed << setprecision(2) << CNtotalFine << endl;
+	
+	cout << setw(8) << right << "CT" << setw(19) << CT << setw(23) << right << CTtotalBook
+		<< setw(28) << right << CTtotalOverDueBook << setw(28) << fixed << setprecision(2) << CTtotalFine << endl;
 
 	return true;
 }
