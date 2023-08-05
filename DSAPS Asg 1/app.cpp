@@ -219,12 +219,12 @@ bool ReadFile(string filename, List* stuList) {
 		return false;
 	}
 	while (!inFile.eof()) {
-		for (int j = 0; j < 3; j++) {
+		for (int j = 0; j < 3; j++) {  //the for loop in the function is to skip the unwanted info in the txt file
 			inFile >> s;
 		}
 		inFile >> id;
 
-		for (int j = 0; j < 2; j++) {
+		for (int j = 0; j < 2; j++) {  
 			inFile >> s;
 		}
 		inFile >> name;
@@ -241,12 +241,12 @@ bool ReadFile(string filename, List* stuList) {
 		}
 		inFile >> phone;
 
-		strcpy_s(student.id, id);
+		strcpy_s(student.id, id);  //copy the student id, name, course and phone_no into the student struct
 		strcpy_s(student.name, name);
 		strcpy_s(student.course, course);
 		strcpy_s(student.phone_no, phone);
 
-		if (!Redundant(*stuList, student)) {
+		if (!Redundant(*stuList, student)) { //if the student is not found in the list, insert the student info (stored in struct) into the list
 			stuList->insert(student);
 		}
 		else
@@ -280,9 +280,9 @@ bool DeleteRecord(List *stuList, char *ID) {
 	
 	type value;
 	for (int i = 1; i <= stuList->size(); i++) {
-		stuList->get(i, value);
-		if (strcmp(ID, value.id) == 0) {
-			if(stuList->remove(i)){
+		stuList->get(i, value);		//browse through the list and access the item in the list
+		if (strcmp(ID, value.id) == 0) {	//compare the id want to dlt with the id in the list
+			if(stuList->remove(i)){		//if the comparison is same, dlt the student info
 				return true;
 			}
 			return false;
