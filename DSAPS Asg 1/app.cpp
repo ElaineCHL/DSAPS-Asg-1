@@ -34,11 +34,12 @@ int main() {
 	char id[10];
 	char ID[20];
 	char* callNum = new char; // used in printStuWithSameBook function
+
 	if (!ReadFile(fileName, stuList))
 		cout << "Unable to read " << fileName << "." << endl;
-	if (!InsertBook(filename, stuList)) {
+	if (!InsertBook(filename, stuList))
 		cout << "Error inserting books." << endl;
-	}
+
 	do {
 		switch (menu()) {
 
@@ -49,10 +50,11 @@ int main() {
 			else
 				cout << "Read successfully." << endl;
 			cout << endl;
+
 			system("pause");
 			system("cls");
-
 			break;
+
 		case 2: // Delete record
 			cout << "Please input the student ID you wish to delete: ";
 			cin.ignore();
@@ -63,6 +65,7 @@ int main() {
 			else
 				cout << "Unable to delete ID" << endl;
 			system("pause");
+			system("cls");
 			break;
 
 		case 3: // Search Student
@@ -122,12 +125,11 @@ int main() {
 			break;
 
 		case 7: // print Stu With Same Book
-			cout << "\nEnter the call number of book: ";
+			cout << "\nEnter call number of book: ";
 			cin >> callNum;
 			if(!printStuWithSameBook(stuList, callNum)) {
 				cout << "Print failed.\n\n";
 			}
-
 			system("pause");
 			system("cls");
 			break;
@@ -174,7 +176,7 @@ int menu() {
 		<< "8. Display Warned Student" << endl
 		<< "9. Exit" << endl;
 	cout << "-------------------------------------" << endl;
-	cout << "Please input your option: ";
+	cout << "Please input your option (1-9): ";
 	cin >> option;
 
 	while (option < 1 || option > 9) {
@@ -748,9 +750,9 @@ int calcJulianDate(int day, int month, int year) { // julian date according to t
 		day += 31;
 	case 3:
 		if (isLeapYear)
-			day += 28;
-		else
 			day += 29;
+		else
+			day += 28;
 	case 2:
 		day += 31;
 	}
@@ -759,11 +761,10 @@ int calcJulianDate(int day, int month, int year) { // julian date according to t
 
 bool printStuWithSameBook(List* list, char* callNum) {
 	int studentCounter = 0;
-	if (list->empty()) {
-		cout << "List is empty." << endl;
+	if (list->empty())
 		return false;
-	}
-	Node* cur = list->head;
+
+	Node* cur = list->head; // cur pointer to traverse the list
 	while (cur != NULL) {
 		for (int i = 0; i < cur->item.totalbook; i++) {
 			if (strcmp(cur->item.book[i].callNum, callNum) == 0) {
@@ -776,28 +777,26 @@ bool printStuWithSameBook(List* list, char* callNum) {
 		cout << "\nNo student has borrowed book of call num " << callNum << "\n\n";
 		return false;
 	}
-	else {
-		cout << "\nThere are " << studentCounter << " student(s) that borrow the book with call number "
-			<< callNum << " as shown below:\n\n";
-		cur = list->head;
-		while (cur != NULL) {
-			for (int i = 0; i < cur->item.totalbook; i++) {
-				if (strcmp(cur->item.book[i].callNum, callNum) == 0) {
-					cout << "Student Id = " << cur->item.id << endl;
-					cout << "Name = " << cur->item.name << endl;
-					cout << "Course = " << cur->item.course << endl;
-					cout << "Phone Number = " << cur->item.phone_no << endl;
-					cout << "Borrow Date: " << cur->item.book[i].borrow.day
-						<< "/" << cur->item.book[i].borrow.month << "/"
-						<< cur->item.book[i].borrow.year << endl;
-					cout << "Due Date: " << cur->item.book[i].due.day
-						<< "/" << cur->item.book[i].due.month << "/"
-						<< cur->item.book[i].due.year << endl;
-					cout << "\n\n";
-				}
+	cout << "\nThere are " << studentCounter << " student(s) that borrow the book with call number "
+		<< callNum << " as shown below:\n\n";
+	cur = list->head;
+	while (cur != NULL) {
+		for (int i = 0; i < cur->item.totalbook; i++) {
+			if (strcmp(cur->item.book[i].callNum, callNum) == 0) {
+				cout << "Student Id = " << cur->item.id << endl;
+				cout << "Name = " << cur->item.name << endl;
+				cout << "Course = " << cur->item.course << endl;
+				cout << "Phone Number = " << cur->item.phone_no << endl;
+				cout << "Borrow Date: " << cur->item.book[i].borrow.day
+					<< "/" << cur->item.book[i].borrow.month << "/"
+					<< cur->item.book[i].borrow.year << endl;
+				cout << "Due Date: " << cur->item.book[i].due.day
+					<< "/" << cur->item.book[i].due.month << "/"
+					<< cur->item.book[i].due.year << endl;
+				cout << "\n\n";
 			}
-			cur = cur->next;
 		}
+		cur = cur->next;
 	}
 	return true;
 }
@@ -806,12 +805,12 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 	int daysDue = 0;
 	int tenDaysOverdueBooks = 0;
 	int overdueBooks = 0;
-	if (list->empty()) {
+
+	if (list->empty())
 		return false;
-	}
-	Node* cur = list->head;
-	for (; cur != NULL; cur = cur->next) {
-		overdueBooks = 0; // reset the number of overdued books for every student before reading in the input
+
+	for (Node* cur = list->head; cur != NULL; cur = cur->next) { // traverse the list
+		overdueBooks = 0; // reset no. of overdued books for every student
 		tenDaysOverdueBooks = 0;
 		for (int i = 0; i < cur->item.totalbook; i++) {
 			daysDue = calcJulianDate(29, 3, 2020) - calcJulianDate(cur->item.book[i].due.day, cur->item.book[i].due.month, cur->item.book[i].due.year);
