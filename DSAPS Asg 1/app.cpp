@@ -21,7 +21,7 @@ bool displayWarnedStudent(List*, List*, List*);
 int menu();
 
 bool Redundant(List, LibStudent);
-int calcJulianDate(int, int);
+int calcJulianDate(int, int, int);
 
 
 int main() {
@@ -70,7 +70,6 @@ int main() {
 			cout << "Enter Student ID: ";
 			cin >> id;
 			if (SearchStudent(stuList, id, stu)) {
-				/*stu.calculateTotalFine();*/
 				stu.print(cout);
 			}
 			else
@@ -416,7 +415,7 @@ bool InsertBook(string filename, List* list) {
 		}
 
 		// Assuming current date is 29/3/2020
-		int daysLate = calcJulianDate(29, 3) - calcJulianDate(dueDay, dueMonth);
+		int daysLate = calcJulianDate(29, 3, 2020) - calcJulianDate(dueDay, dueMonth, dueYear);
 		double fine = 0.0;
 
 		// Calculate the fine
@@ -723,7 +722,11 @@ bool computeAndDisplayStatistics(List* list) {
 }
 
 // used in insert book function
-int calcJulianDate(int day, int month) { // julian date according to the year 2022
+int calcJulianDate(int day, int month, int year) { // julian date according to the year 2022
+	bool isLeapYear = false;
+	if (year % 4 == 0) {
+		isLeapYear = true;
+	}
 	switch (month) {
 	case 12:
 		day += 30;
@@ -744,7 +747,10 @@ int calcJulianDate(int day, int month) { // julian date according to the year 20
 	case 4:
 		day += 31;
 	case 3:
-		day += 29;
+		if (isLeapYear)
+			day += 28;
+		else
+			day += 29;
 	case 2:
 		day += 31;
 	}
@@ -808,7 +814,7 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 		overdueBooks = 0; // reset the number of overdued books for every student before reading in the input
 		tenDaysOverdueBooks = 0;
 		for (int i = 0; i < cur->item.totalbook; i++) {
-			daysDue = calcJulianDate(29, 3) - calcJulianDate(cur->item.book[i].due.day, cur->item.book[i].due.month);
+			daysDue = calcJulianDate(29, 3, 2020) - calcJulianDate(cur->item.book[i].due.day, cur->item.book[i].due.month, cur->item.book[i].due.year);
 			if (daysDue < 0) {
 				daysDue = 0;
 			}
@@ -819,18 +825,11 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 				overdueBooks++;
 			}
 		}
-		//cout << cur->item.name << endl << endl;
-		//cout << "Days due = " << daysDue << endl;
-		//cout << "Ten Days due books = " << tenDaysOverdueBooks << endl;
-		//cout << "No. of due books = " << overdueBooks << endl;
-		//cout << endl;
 		if (tenDaysOverdueBooks > 2) {
 			type1->insert(cur->item);
-			//cur->item.print(cout);
 		}
 		if ((overdueBooks == cur->item.totalbook) && (cur->item.total_fine > 50)) {
 			type2->insert(cur->item);
-			//cur->item.print(cout);
 		}
 	}
 	return true;
