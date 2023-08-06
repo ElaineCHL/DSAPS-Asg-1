@@ -136,15 +136,21 @@ int main() {
 		case 8: // Display warned student
 			if (!displayWarnedStudent(stuList, type1, type2))
 				cout << "Unable to display warned student." << endl;
+			cout << "\n=============================================================\n";
+			cout << "                        List type1\n";
+			cout << " (Student who has > 2 books that are overdue for >= 10 days)\n";
+			cout << "=============================================================\n" << endl;
+			Display(type1, 2, 1); // display type1 in the screen with student info and book list.
 
-			if (!Display(type1, 2, 1)) { // display type1 in the screen with student info and book list.
-				cout << "List type1 is empty." << endl;
-			}
-			cout << "\n\n";
+			cout << "\n";
+			cout << "\n================================================================\n";
+			cout << "                       List type2\n";
+			cout << " (Student whose total fine is > RM 50.00 and every book is due)\n";
+			cout << "================================================================\n" << endl;
+			Display(type2, 2, 1); // display type2 in the screen with student info and book list.
 
-			if (!Display(type2, 2, 1)) { // display type2 in the screen with student info and book list.
-				cout << "List type2 is empty." << endl;
-			}
+			system("pause");
+			system("cls");
 			break;
 
 		case 9: // Exit
@@ -765,7 +771,7 @@ bool printStuWithSameBook(List* list, char* callNum) {
 		return false;
 	}
 	else {
-		cout << "\nThere are " << studentCounter << " students that borrow the book with call number "
+		cout << "\nThere are " << studentCounter << " student(s) that borrow the book with call number "
 			<< callNum << " as shown below:\n\n";
 		cur = list->head;
 		while (cur != NULL) {
@@ -802,7 +808,10 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 		overdueBooks = 0; // reset the number of overdued books for every student before reading in the input
 		tenDaysOverdueBooks = 0;
 		for (int i = 0; i < cur->item.totalbook; i++) {
-			daysDue = calcJulianDate(cur->item.book[i].due.day, cur->item.book[i].due.month) - calcJulianDate(29, 3);
+			daysDue = calcJulianDate(29, 3) - calcJulianDate(cur->item.book[i].due.day, cur->item.book[i].due.month);
+			if (daysDue < 0) {
+				daysDue = 0;
+			}
 			if (daysDue >= 10) {
 				tenDaysOverdueBooks++;
 			}
@@ -810,13 +819,18 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 				overdueBooks++;
 			}
 		}
+		//cout << cur->item.name << endl << endl;
+		//cout << "Days due = " << daysDue << endl;
+		//cout << "Ten Days due books = " << tenDaysOverdueBooks << endl;
+		//cout << "No. of due books = " << overdueBooks << endl;
+		//cout << endl;
 		if (tenDaysOverdueBooks > 2) {
 			type1->insert(cur->item);
-			cur->item.print(cout);
+			//cur->item.print(cout);
 		}
 		if ((overdueBooks == cur->item.totalbook) && (cur->item.total_fine > 50)) {
 			type2->insert(cur->item);
-			cur->item.print(cout);
+			//cur->item.print(cout);
 		}
 	}
 	return true;
