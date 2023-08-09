@@ -331,7 +331,7 @@ bool InsertBook(string filename, List* list) {
 		// Read the date a book is borrowed
 		for (int i = 0; i < strlen(borrowDate); i++)
 		{
-			if (borrowDate[i] != '/') // Identify the part of day, month and year
+			if (borrowDate[i] != '/') // Identify the part for day, month and year
 			{
 				if (x == 0)
 				{
@@ -376,7 +376,7 @@ bool InsertBook(string filename, List* list) {
 		int c = 0, d = 0;
 		for (int i = 0; i < strlen(dueDate); i++)
 		{
-			if (dueDate[i] != '/') // Identify the part of day, month and year
+			if (dueDate[i] != '/') // Identify the part for day, month and year
 			{
 				if (c == 0)
 				{
@@ -572,52 +572,29 @@ bool Display(List* list, int source, int detail) {
 		cout << "Invalid source. Use 1 for file or 2 for screen." << endl;
 		return false;
 	}
-	// Iterate through the list and display the information
-	int studentCount = 0;
+
 	Node* cur = list->head;
-	while (cur != NULL) {
-		studentCount++;
-		cur = cur->next;
-	}
-	// Create an array to store pointers to LibStudent objects
-	LibStudent** studentArray = new LibStudent * [studentCount];
-
-	// Traverse the linked list and store the pointers in the array
-	cur = list->head;
-	int index = 0;
-	while (cur != NULL) {
-		studentArray[index] = &(cur->item);
-		index++;
-		cur = cur->next;
-	}
-
-	// Display the sorted students from the array
 	int stuNum = 1;
-	for (int i = 0; i < studentCount; i++) {
-		LibStudent* student = studentArray[i];
-
-		// Calculate total fine before displaying it
-		// student->calculateTotalFine();
+	while (cur != NULL) {
+		LibStudent& student = cur->item;
+		// Display students' detail from student list
 		*output << "\nSTUDENT " << stuNum++;
-		student->print(*output);
+		student.print(*output);
 		*output << endl;
 
 		if (detail == 1) {
+			// Display books' detail from student list
 			*output << "BOOK LIST:" << "\n\n";
-			for (int i = 0; i < student->totalbook; i++) {
+			for (int i = 0; i < student.totalbook; i++) {
 				*output << "BOOK " << i + 1 << "\n";
-				student->book[i].print(*output);
+				student.book[i].print(*output);
 				*output << endl;
 			}
 		}
 		*output << "*****************************************************************************" << endl;
-	}
-	// Clean up the dynamically allocated memory
-	delete[] studentArray;
-
-	if (source == 1) {
-		outputFile.close();
-	}
+		cur = cur->next;
+	}		
+	outputFile.close();	
 	return true;
 }
 
@@ -723,7 +700,7 @@ bool computeAndDisplayStatistics(List* list) {
 	return true;
 }
 
-// used in insert book function
+// Used in insert book function
 int calcJulianDate(int day, int month, int year) { // julian date according to the year 2022
 	bool isLeapYear = false;
 	if (year % 4 == 0) {
