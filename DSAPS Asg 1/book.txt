@@ -34,3 +34,18 @@
 
 
 1310983 Micheal_Main/Walter_Savitch Data_Structures_and_Other_Objects_Using_C++ Prentice_Hall 0132129485 2010 QA76.73.C153N868 20/3/2020 20/4/2020  
+
+
+2207123 DS_Malik C++_Programming Cengage_Learning 0538798084 2011 QA.123123 1/12/2019 1/1/2020	
+
+2207123 Adam_Drozdek Data_Structures_and_Algorithmic_Problem_Solving Cengage_Learning 1133608426 2013 QA.123133 1/12/2019 1/1/2020 
+
+2207123 Mohanty Data_Structure_and_Algorithms_Using_C Scrivener_Publishing 9781119750 2021 QA.111111 1/12/2019 1/1/2020  
+
+2207123 Hi Data_Structure_and_Algorithms_Using_C Scrivener_Publishing 9781119750 2021 QA.111111 1/12/2019 1/1/2020 
+
+207012 HHH Titlezzzz PublisherABC 0129741925 2000 QA.8571857 2/2/2020 2/3/2020
+
+207012 Book222 TitleUWUzzzz Pearson 0129741925 1967 QA.8573857 18/2/2020 18/3/2020
+
+207012 George_Blair-West/Jennifer_Haynes The_Girl_in_the_Green_Dress Pearson 0129741925 1967 QA.857857 10/2/2020 11/3/2020

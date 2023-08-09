@@ -32,3 +32,15 @@ Student Id = 1310983
 Name = Audrey Chan
 course = IA
 Phone Number = 521-3879
+
+
+Student Id = 2207123
+Name = Elaine Chung
+course = CT
+Phone Number = 121-3871
+
+
+Student Id = 207012
+Name = Jeni Haynes
+course = IB
+Phone Number = 123-3879
