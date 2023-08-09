@@ -701,7 +701,7 @@ bool computeAndDisplayStatistics(List* list) {
 }
 
 // Used in insert book function
-int calcJulianDate(int day, int month, int year) { // julian date according to the year 2022
+int calcJulianDate(int day, int month, int year) { // Julian date according to the year 2022
 	bool isLeapYear = false;
 	if (year % 4 == 0) {
 		isLeapYear = true;
