@@ -811,9 +811,7 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 		tenDaysOverdueBooks = 0;
 		for (int i = 0; i < cur->item.totalbook; i++) {
 			daysDue = calcJulianDate(29, 3, 2020) - calcJulianDate(cur->item.book[i].due.day, cur->item.book[i].due.month, cur->item.book[i].due.year);
-			if (daysDue < 0) {
-				daysDue = 0;
-			}
+
 			if (daysDue >= 10) {
 				tenDaysOverdueBooks++;
 			}
