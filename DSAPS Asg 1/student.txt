@@ -33,14 +33,13 @@ Name = Audrey Chan
 course = IA
 Phone Number = 521-3879
 
+Student Id = 1001000
+Name = Sarah Miller
+course = CS
+Phone Number = 123-3233
 
-Student Id = 2207123
-Name = Elaine Chung
-course = CT
-Phone Number = 121-3871
 
-
-Student Id = 207012
-Name = Jeni Haynes
+Student Id = 2002000
+Name = Brian Williams
 course = IB
-Phone Number = 123-3879
+Phone Number = 999-4579
