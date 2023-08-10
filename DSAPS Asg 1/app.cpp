@@ -179,17 +179,25 @@ int menu() {
 	cout << "Please input your option (1-9): ";
 	cin >> option;
 
-	while (option < 1 || option > 9) {
-		cout << "Out of range! Enter again: ";
-		cin >> option;
-	}
-
 	while (cin.fail()) {
 		cin.clear();
 		cin.ignore(100, '\n');
 		cout << "Not an integer! Enter again: ";
 		cin >> option;
 	}
+
+	while (option < 1 || option > 9) {
+		cout << "Out of range! Enter again: ";
+		cin >> option;
+		while (cin.fail()) {
+			cin.clear();
+			cin.ignore(100, '\n');
+			cout << "Not an integer! Enter again: ";
+			cin >> option;
+		}
+	}
+
+
 	return option;
 }
 
@@ -701,7 +709,7 @@ bool computeAndDisplayStatistics(List* list) {
 }
 
 // Used in insert book function
-int calcJulianDate(int day, int month, int year) { // Julian date according to the year 2022
+int calcJulianDate(int day, int month, int year) {
 	bool isLeapYear = false;
 	if (year % 4 == 0) {
 		isLeapYear = true;
@@ -732,6 +740,14 @@ int calcJulianDate(int day, int month, int year) { // Julian date according to t
 			day += 28;
 	case 2:
 		day += 31;
+	}
+	while (year < 2020) {
+		if (year % 4 == 0) {
+			day -= 366;
+		}
+		else
+			day -= 365;
+		year++;
 	}
 	return day;
 }
