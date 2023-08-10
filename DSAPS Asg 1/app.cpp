@@ -135,6 +135,12 @@ int main() {
 			break;
 
 		case 8: // Display warned student
+			while (!type1->empty()) { // clear any previous records
+				type1->remove(1);
+			}
+			while (!type2->empty()) {
+				type2->remove(1);
+			}
 			if (!displayWarnedStudent(stuList, type1, type2))
 				cout << "Unable to display warned student." << endl;
 			cout << "\n=============================================================\n";
@@ -179,14 +185,14 @@ int menu() {
 	cout << "Please input your option (1-9): ";
 	cin >> option;
 
-	while (cin.fail()) {
+	while (cin.fail()) { // input validation
 		cin.clear();
 		cin.ignore(100, '\n');
 		cout << "Not an integer! Enter again: ";
 		cin >> option;
 	}
 
-	while (option < 1 || option > 9) {
+	while (option < 1 || option > 9) { // input validation
 		cout << "Out of range! Enter again: ";
 		cin >> option;
 		while (cin.fail()) {
@@ -196,8 +202,6 @@ int menu() {
 			cin >> option;
 		}
 	}
-
-
 	return option;
 }
 
@@ -742,7 +746,7 @@ int calcJulianDate(int day, int month, int year) {
 		day += 31;
 	}
 	while (year < 2020) {
-		if (year % 4 == 0) {
+		if (year % 4 == 0) { // if is leap year
 			day -= 366;
 		}
 		else
@@ -796,14 +800,14 @@ bool printStuWithSameBook(List* list, char* callNum) {
 
 bool displayWarnedStudent(List* list, List* type1, List* type2) {
 	int daysDue = 0;
-	int tenDaysOverdueBooks = 0;
-	int overdueBooks = 0;
+	int tenDaysOverdueBooks = 0; // no. of books that are overdued for more than ten days
+	int overdueBooks = 0;		 // no. of books that are overdued
 
 	if (list->empty())
 		return false;
 
 	for (Node* cur = list->head; cur != NULL; cur = cur->next) { // traverse the list
-		overdueBooks = 0; // reset no. of overdued books for every student
+		overdueBooks = 0; // reset no. of overdued books for each student
 		tenDaysOverdueBooks = 0;
 		for (int i = 0; i < cur->item.totalbook; i++) {
 			daysDue = calcJulianDate(29, 3, 2020) - calcJulianDate(cur->item.book[i].due.day, cur->item.book[i].due.month, cur->item.book[i].due.year);
