@@ -1,0 +1,10 @@
+Student Id = 1001000
+Name = Sarah Miller
+course = CT
+Phone Number = 123-3233
+
+
+Student Id = 2002000
+Name = Brian Williams
+course = IB
+Phone Number = 999-4579

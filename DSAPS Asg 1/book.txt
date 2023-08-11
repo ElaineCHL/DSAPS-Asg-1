@@ -34,18 +34,3 @@
 
 
 1310983 Micheal_Main/Walter_Savitch Data_Structures_and_Other_Objects_Using_C++ Prentice_Hall 0132129485 2010 QA76.73.C153N868 20/3/2020 20/4/2020  
-
-
-1001000 DS_Malik C++_Programming Cengage_Learning 0538718084 2011 QC12.73.C153S26 1/12/2019 1/1/2020	
-
-1001000 Adam_Drozdek Data_Structures_and_Algorithmic_Problem_Solving Cengage_Learning 2233608426 2013 QQ76.73.C153S26 4/2/2020 4/3/2020 
-
-1001000 Mohanty Data_Structure_and_Algorithms_Using_C Scrivener_Publishing 9781122750 2021 QA76.73.G223S26 20/1/2020 20/2/2020  
-
-1001000 Minnesota/Nikke_Rameses Data_Structure_and_Algorithms_Using_C Scrivener_Publishing 9781119750 2021 QA76.73.C153S26 28/2/2020 28/3/2020 
-
-2002000 Richard_Dones A_Bad_Place MsS_Publishing 0329741925 2000 QA76.55.C153S26 2/2/2020 2/3/2020
-
-2002000 Phang_Yi_Tat Introduction_to_C Pearson 5129741925 1967 QA76.73.D153SV6 18/2/2020 18/3/2020
-
-2002000 George_Blair-West/Jennifer_Haynes The_Girl_in_the_Green_Dress Pearson 1231419215 1967 QA76.73.W100S26 10/2/2020 11/3/2020 

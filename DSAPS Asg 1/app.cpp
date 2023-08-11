@@ -35,10 +35,13 @@ int main() {
 	char ID[20];
 	char* callNum = new char; // used in printStuWithSameBook function
 
-	if (!ReadFile(fileName, stuList))
+	if (!ReadFile(fileName, stuList)) {
 		cout << "Unable to read " << fileName << "." << endl;
+		system("pause");
+		return 0;
+	}
 	if (!InsertBook(filename, stuList))
-		cout << "Error inserting books." << endl;
+		cout << "Error opening " << filename << endl;
 
 	do {
 		switch (menu()) {
@@ -87,7 +90,7 @@ int main() {
 				cout << "\nBooks inserted successfully!" << endl;
 			}
 			else
-				cout << "Error inserting books." << endl;
+				cout << "Error inserting books from " << filename << "." << endl;
 
 			system("pause");
 			system("cls");
@@ -234,7 +237,6 @@ bool ReadFile(string filename, List* stuList) {
 	char name[20], course[20], phone[20], id[20];
 
 	if (inFile.fail()) {
-		cout << "Unable to open the file!" << endl;
 		return false;
 	}
 	while (!inFile.eof()) {
@@ -313,7 +315,6 @@ bool DeleteRecord(List *stuList, char *ID) {
 bool InsertBook(string filename, List* list) {
 	ifstream bookFile(filename);
 	if (!bookFile) {
-		cout << "Error opening book.txt\n";
 		return false;
 	}
 	Node* temp;
