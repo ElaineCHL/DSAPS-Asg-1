@@ -822,7 +822,7 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 		if (tenDaysOverdueBooks > 2) {
 			type1->insert(cur->item);
 		}
-		if ((overdueBooks == cur->item.totalbook) && (cur->item.total_fine > 50)) {
+		if (overdueBooks == cur->item.totalbook && cur->item.total_fine > 50) {
 			type2->insert(cur->item);
 		}
 	}
